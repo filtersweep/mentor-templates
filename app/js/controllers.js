@@ -102,11 +102,16 @@
 				if (templateOffset < 0) {
 					templateOffset = templatesCount - delta;
 				} 
-					
-				selectedIndex = delta - 1;
-				if (selectedIndex < 0) {
-					selectedIndex = TEMPLATE_SET_SIZE - 1;
+				
+				if (templateOffset + TEMPLATE_SET_SIZE > templatesCount) {
+					selectedIndex = delta - 1;
+					if (selectedIndex < 0) {
+						selectedIndex = TEMPLATE_SET_SIZE - 1;
+					}
+				} else {
+					selectedIndex = 3;
 				}
+
 				updateTemplates();
 				$location.path("/templates");
 			};
