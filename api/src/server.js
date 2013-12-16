@@ -12,7 +12,9 @@ var server = restify.createServer(),
 
 /* reload our data store if it gets modified outside the app.  that way we don't have 
  to read it with every request */
-/* 
+/* this happens whenever we touch the file, too.  I could write something that checks
+ for internal edits, but it was really only useful when generating the xml file 
+ initially. If it becomes important again, I'll fix this.
 fs.watch(
 	config.templateStoragePath,
 	function () {
@@ -56,7 +58,7 @@ server.get(
 	function (req, res, next) {
 		var result = templates.get({
 				range: {
-					offset: req.params.offset
+					start: req.params.offset
 				}
 			});
 
