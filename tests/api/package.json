@@ -4,6 +4,7 @@
 	"author": "Beau Burke <beau@filterswept.com>",
 	"description": "Unit tests for our mentor template app backend.",
 	"dependencies": {
+		"restify": ">=2.6.1", 
 		"mocha": ">=1.15.1"
 	},
 	"scripts": {

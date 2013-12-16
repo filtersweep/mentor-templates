@@ -6,12 +6,12 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 cd $DIR
 
-# run api tests
+### run api tests
 cd api
 npm install
 npm test
 
-# run app tests
+### run app tests
 cd ../app
 npm install
 npm test
