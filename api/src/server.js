@@ -4,6 +4,10 @@ var fs = require("fs"),
 	persist = require("./persist.js"),
 	config = require("./config.js");
 
+/**
+ * @module
+ */
+
 var server = restify.createServer(),
 	templates = new template.TemplateCollection(
 		persist.getTemplateInput(), 
@@ -26,18 +30,36 @@ fs.watch(
 );
 */
 
+/**
+ * Simple error generating function, useful when the server can't find a template
+ * with the supplied ID.
+ * @param {number} id - ID for the missing template.
+ * @function
+ */
+
 function templateNotFoundError(id) {
 	return "Can't find template with ID:" + id;
 }
+
+/**
+ * Set up query parsing and enable CORS. We'll let anyone connect to our API,
+ * although this should probably be a config option some day.
+ */
 
 server.use(restify.queryParser());
 server.use(restify.urlEncodedBodyParser());
 server.use(
 	function (req, res, next) {
-		res.header("Access-Control-Allow-Origin", "http://localhost");
+		res.header("Access-Control-Allow-Origin", "*");
 		return next();
 	}
 );
+
+/**
+ * GET /templates 
+ * This is the default route for our API.  It simply returns a JSON array of all
+ * the templates the system knows about.
+ */
 
 server.get(
 	"/templates",
@@ -46,12 +68,24 @@ server.get(
 	}
 );
 
+/**
+ * GET /templates/count
+ * Returns a simple JSON object with one attribute "length", which describes
+ * how many templates are available.
+ */
+
 server.get(
 	"/templates/count",
 	function (req, res, next) {
 		res.json({count: templates.length()});
 	}
 );
+
+/**
+ * GET /templates/from/:offset
+ * Returns a subset of the available templates, starting at the :offset argument.
+ * If the offset is out of range, then an empty array is returned.
+ */
 
 server.get(
 	"/templates/from/:offset",
@@ -66,6 +100,13 @@ server.get(
 	}
 );
 
+/**
+ * GET /templates/from/:start/to/:end
+ * Returns a subset of the available templates, starting at the :start argument and
+ * continuing through the :end argument.  If the offset is out of range, then an empty 
+ * array is returned.
+ */
+
 server.get(
 	"/templates/from/:start/to/:end",
 	function (req, res, next) {
@@ -79,6 +120,20 @@ server.get(
 		res.json(result);
 	}
 );
+
+/**
+ * POST /templates
+ * Adds a new template to the data store. Doesn't actually do any image placement,
+ * so files must be uploaded to an image host by hand.  Expects the following arugments.
+ * id - ID number for the new template.  *this is currently unchecked. we should verify this value makes sense later*
+ * title - Title for the new template.
+ * description - Short description for the template.
+ * cost - Floating point number describing the price of the template.
+ * previewURL - URL pointing to the template's full-size preview.
+ * thumbnailURL - URL pointing to the template's thumbnail-size preview.
+ * Returns a simple JSON object with one attribute "created". If the creation 
+ * succeeds, then the value will be true. If an error occurs, the value will be 
+ * false and an error message is included in the result object. */
 
 server.post(
 	"/templates",
@@ -99,6 +154,12 @@ server.post(
 	}
 );
 
+/**
+ * GET /templates/:templateid
+ * Retrieves a single template from the store. If the template doesn't exist, then an
+ * error object is returned instead.
+ */
+
 server.get(
 	"/templates/:templateid",
 	function (req, res, next) {
@@ -112,6 +173,16 @@ server.get(
 		}
 	}
 );
+
+/**
+ * POST /templates/:templateid
+ * Updates a single template's values. If the template doesn't exist, then an error
+ * object is returned instead. Expects the same arguments describe in the POST /templates
+ * route. If an argument isn't supplied, it's value won't be changes. Extraneous arguments
+ * will be ignored. Returns a simple JSON object with one attribute "updated". If the 
+ * update succeeds, then the value will be true. If an error occurs, the value will be 
+ * false and  an error message is included in the result object.
+ */
 
 server.post(
 	"/templates/:templateid",
@@ -146,6 +217,14 @@ server.post(
 	}
 );
 
+/**
+ * DEL /templates/:templateid
+ * Removes the specified template from the store. Returns a simple JSON object 
+ * with one attribute "deleted". If the removal succeeds, then the value will
+ * be true. If an error occurs, the value will be false and  an error message 
+ * is included in the result object.
+ */
+
 server.del(
 	"/templates/:templateid",
 	function (req, res, next) {
@@ -171,6 +250,8 @@ server.del(
 		res.json(response);
 	}
 );
+
+/** if we're the main module, then start listening. otherwise just export the server. */
 
 if (require.main === module) {
 	server.listen(config.listenPort);	
