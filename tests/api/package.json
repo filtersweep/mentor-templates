@@ -1,0 +1,12 @@
+{
+	"name": "mentor-template-api-test",
+	"version": "0.1.0",
+	"author": "Beau Burke <beau@filterswept.com>",
+	"description": "Unit tests for our mentor template app backend.",
+	"dependencies": {
+		"mocha": ">=1.15.1"
+	},
+	"scripts": {
+		"start": "mocha ./unit"
+	}
+}

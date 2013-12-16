@@ -1,0 +1,14 @@
+{
+	"name": "mentor-templates",
+	"version": "0.1.0",
+	"author": "Beau Burke <beau@filterswept.com>",
+	"description": "A simple REST API cataloging Mentor Graphics site templates.",
+	"dependencies": {
+		"restify": ">=2.6.1", 
+		"xml2js": ">=0.4.0",
+		"xmlbuilder": ">=1.1.2"
+	},
+	"scripts": {
+		"start": "node src/server.js"
+	}
+}

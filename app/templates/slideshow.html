@@ -1,0 +1,27 @@
+<div id="main" role="main">
+	<div id="large">
+		<div class="group">
+			<img ng-src="{{selected.previewURL}}" alt="Large Image" width="430" height="360" />
+			<div class="details">
+				<p><strong>Title</strong> <span ng-bind-template="{{selected.title}}">My Great Template</span></p>
+				<p><strong>Description</strong> <span ng-bind-template="{{selected.description}}">This is a template suited for a professional business site. Original layered Photoshop .psd is included</span></p>
+				<p><strong>Cost</strong> <span ng-bind="formatPrice(selected.cost)">$45</span></p>
+				<p><strong>ID #</strong> <span ng-bind-template="{{selected.id}}">7112</span></p>
+				<p><strong>Thumbnail File</strong> <span ng-bind="getFilename(selected.thumbnailURL)">7112-m.jpg</span></p>
+				<p><strong>Large Image File</strong> <span ng-bind="getFilename(selected.previewURL)">7112-b.jpg</span></p>
+			</div>
+		</div>
+	</div>
+	<div class="thumbnails">
+		<div class="group">
+			<a ng-repeat="template in templates | orderBy:id" href="#/templates/{{template.id}}" title="{{template.id}}" ng-class="template.className">
+				<img ng-src="{{template.thumbnailURL}}" alt="{{template.id}}" width="" height="" />
+				<span>{{template.id}}</span>
+			</a>
+
+			<a href="#" class="previous" title="Previous" ng-click="prevTemplates()">Previous</a>
+			<a href="#" class="next" title="Next" ng-click="nextTemplates()">Next</a>
+		</div>
+	</div>
+</div>
+
