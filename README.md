@@ -26,3 +26,4 @@ In the end, I was able to finish the primary project requirements, some addition
 
 4. Make the app more frugal with its API calls.  Right now, every template switch causes an API invocation.  There's got to be a way to have that happen only when getting the next and prev templates.
 
+5. Finish writing inline documentation for all code.
