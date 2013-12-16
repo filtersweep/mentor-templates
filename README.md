@@ -2,7 +2,7 @@
 
 I probably bit off more than I should have for this project.  I wanted to use it as an opportunity to work with unfamiliar tools and frameworks which I'd been interested in.  To that end, I chose to build the API with restify in node.js and the front end in Angular.js.  As I was comitted to writing tests for any code I generated, I also found myself having to learn two unfamiliar testing frameworks (Mocha and Karma).
 
-In the end, I was able to finish the primary project requirements, some additional backend work, and a number of tests.  I was hoping to finish all the "extra credit," but I underestimated how much time it would take me to get up to speed with Angular and Karma.  If I had a full extra day to work on the project, I'm sure I could complete it.
+In the end, I was able to finish the primary project requirements, some additional backend work, and a number of tests.  I was hoping to finish all the "extra credit," but I underestimated how much time it would take me to get up to speed with Angular and Karma.  If I had a full extra day to work on the project, I'm sure I could complete all the pieces and clean up some of the more goofy bits.
 
 * Setup
 
