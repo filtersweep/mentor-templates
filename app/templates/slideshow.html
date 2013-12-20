@@ -14,13 +14,16 @@
 	</div>
 	<div class="thumbnails">
 		<div class="group">
-			<a ng-repeat="template in templates | orderBy:id" href="#/templates/{{template.id}}" title="{{template.id}}" ng-class="template.className">
+			<a ng-repeat="template in templates | orderBy:id" href="#/templates/{{template.id}}" title="{{template.id}}" ng-class="getClass(template)">
 				<img ng-src="{{template.thumbnailURL}}" alt="{{template.id}}" width="" height="" />
 				<span>{{template.id}}</span>
 			</a>
 
-			<a href="#" class="previous" title="Previous" ng-click="prevTemplates()">Previous</a>
-			<a href="#" class="next" title="Next" ng-click="nextTemplates()">Next</a>
+
+			<div ng-repeat="moment in history">{{moment.id}} {{moment.title}}</div>
+
+			<a class="previous" title="Previous" ng-click="prevTemplates()">Previous</a>
+			<a class="next" title="Next" ng-click="nextTemplates()">Next</a>
 		</div>
 	</div>
 </div>

@@ -4,10 +4,12 @@
 
 (function () {
 	var controllers = angular.module("mentorTemplateControllers", []),
-		selectedIndex = 0,     /** currently selected template index */
+		selectedID = "",       /** currently selected template index */
 		templateOffset = 0,    /** offset into the total templates available via the API */
 		templatesCount = 0,    /** total number of templates available from the API */
-		TEMPLATE_SET_SIZE = 4; /** template subset size */
+		TEMPLATE_SET_SIZE = 4, /** template subset size */
+		HISTORY_MAX_SIZE = 5,  /** template subset size */
+		history = [];
 
 	/** 
 	 * Before we do anything, we need to know how many templates are available from
@@ -30,25 +32,42 @@
 
 	controllers.controller(
 		"TemplateSlideshowCtrl",
-		function ($scope, $routeParams, $location, TemplateRange) {
+		function ($scope, $routeParams, $location, TemplateRange, Template) {
+			var updateHistory = function (template) {
+				history.push(template);
+
+				if (history.length > HISTORY_MAX_SIZE) {
+					history.pop();
+				}
+				
+				$scope.history = history;
+			};
+
+			var updateSelected = function () {
+				selectedID = $routeParams.templateid;
+				$scope.selected = Template.get(
+					{templateid: selectedID},
+					function (template) {
+						$scope.selected = template;
+						$scope.selected.className = "active";
+						updateHistory(template);
+					}
+				);
+			};
 
 			/** Does the actual work of retrieving templates and choosing the selected template */
 			var updateTemplates = function () {
 				$scope.templates = TemplateRange.query(
 					{start: templateOffset, end: templateOffset + TEMPLATE_SET_SIZE},
 					function (templates) {
-						var i = 0;
-
-						for (i = 0; i < templates.length; i += 1) {
-							if (templates[i].id == $routeParams.templateid) {
-								selectedIndex = i;
-							}
+						if (!$routeParams.templateid || !selectedID) {
+							selectedID = templates[0].id;
+							$scope.selected = templates[0];
+							$scope.selected.className = "active";
 						}
-						
-						$scope.selected = templates[selectedIndex];
-						$scope.selected.className = "active";
 					}
 				);
+
 			};
 
 			/** 
@@ -84,10 +103,9 @@
 				templateOffset += TEMPLATE_SET_SIZE;
 				if (templateOffset >= templatesCount) {
 					templateOffset = 0;
-				}
-				selectedIndex = 0;
+				}	
 				updateTemplates();
-				$location.path("/templates");
+				return false;
 			};
 
 			/** 
@@ -95,29 +113,25 @@
 			 * becomes the last template available in the previous subset.
 			 */			
 
-			$scope.prevTemplates = function () {
+			$scope.prevTemplates = function (evt) {
 				var delta = (templatesCount % TEMPLATE_SET_SIZE) || TEMPLATE_SET_SIZE;
 
 				templateOffset -= TEMPLATE_SET_SIZE;
 				if (templateOffset < 0) {
 					templateOffset = templatesCount - delta;
 				} 
-				
-				if (templateOffset + TEMPLATE_SET_SIZE > templatesCount) {
-					selectedIndex = delta - 1;
-					if (selectedIndex < 0) {
-						selectedIndex = TEMPLATE_SET_SIZE - 1;
-					}
-				} else {
-					selectedIndex = 3;
-				}
-
 				updateTemplates();
-				$location.path("/templates");
+				return false;
+			};
+
+			$scope.getClass = function (template) {
+				return (template.id == selectedID) ? "active" : "";
 			};
 
 			updateTemplates();
+			if ($routeParams.templateid) {
+				updateSelected();
+			}
 		}
 	);
-
 })();

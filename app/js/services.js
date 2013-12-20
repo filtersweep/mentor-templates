@@ -49,4 +49,20 @@
 			return $resource("//localhost:8080/templates/count", {}, {});
 		}
 	);
+
+	/**
+	 * The Template server gives us an instance of a single template with id :templateid
+	 */
+
+	services.factory(
+		"Template",
+		function ($resource) {
+			return $resource("//localhost:8080/templates/:templateid", {}, {
+				get: {
+					method: "GET",
+					isArray: false
+				}
+			});
+		}
+	);
 })();
